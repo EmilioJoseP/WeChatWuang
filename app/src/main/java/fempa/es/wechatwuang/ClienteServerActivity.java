@@ -1,7 +1,9 @@
 package fempa.es.wechatwuang;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 public class ClienteServerActivity extends AppCompatActivity {
 
@@ -10,6 +12,13 @@ public class ClienteServerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente_server);
 
-        //prueba
+
+    }
+
+    //Boton Acerca De...
+    public void onClickAcercaDe(View v){
+        Intent intent = new Intent(ClienteServerActivity.this, AcercaDe.class);
+        startActivity(intent);
+
     }
 }
