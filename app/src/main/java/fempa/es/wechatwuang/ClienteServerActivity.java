@@ -22,7 +22,7 @@ public class ClienteServerActivity extends AppCompatActivity {
 
     //Boton Cliente
     public void onClickCliente(View v){
-        Intent intent = new Intent(ClienteServerActivity.this, ClienteDatosActivity.class);
+        Intent intent = new Intent(ClienteServerActivity.this, DatosClienteActivity.class);
         startActivity(intent);
     }
 
