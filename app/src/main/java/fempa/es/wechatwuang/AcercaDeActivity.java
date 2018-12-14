@@ -3,7 +3,7 @@ package fempa.es.wechatwuang;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class AcercaDe extends AppCompatActivity {
+public class AcercaDeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

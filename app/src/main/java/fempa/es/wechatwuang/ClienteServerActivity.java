@@ -17,7 +17,7 @@ public class ClienteServerActivity extends AppCompatActivity {
 
     //Boton Acerca De...
     public void onClickAcercaDe(View v){
-        Intent intent = new Intent(ClienteServerActivity.this, AcercaDe.class);
+        Intent intent = new Intent(ClienteServerActivity.this, AcercaDeActivity.class);
         startActivity(intent);
 
     }

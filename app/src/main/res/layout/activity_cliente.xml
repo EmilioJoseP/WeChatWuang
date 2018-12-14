@@ -1,6 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/textViewCliente"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:text="Cliente"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewDirecIp"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:text="Dirección Ip"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="107dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editTextIp"
+            android:layout_width="274dp"
+            android:layout_height="wrap_content"
+            android:hint="192.168.X.X"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textViewDosPuntos"
+            android:layout_width="38dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=" :"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTextPuerto"
+            android:layout_width="86dp"
+            android:layout_height="wrap_content"
+            android:hint="5000"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewNombre"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Nombre"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editTextNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Eustaquio"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/paraEspaciar0"
+        android:layout_width="match_parent"
+        android:layout_height="57dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/paraEspaciar1"
+            android:layout_width="206dp"
+            android:layout_height="34dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/buttonAceptarCliente"
+            android:layout_width="114dp"
+            android:layout_height="wrap_content"
+            android:text="Aceptar" />
+
+        <TextView
+            android:id="@+id/paraEspaciar2"
+            android:layout_width="206dp"
+            android:layout_height="34dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</LinearLayout>
