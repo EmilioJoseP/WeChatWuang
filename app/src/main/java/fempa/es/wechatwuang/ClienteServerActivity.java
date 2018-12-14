@@ -22,8 +22,8 @@ public class ClienteServerActivity extends AppCompatActivity {
 
     //Boton Cliente
     public void onClickCliente(View v){
-        Intent intent = new Intent(ClienteServerActivity.this, ClienteDatosActivity.class);
-        startActivity(intent);
+       // Intent intent = new Intent(ClienteServerActivity.this, ClienteDatosActivity.class);
+        //startActivity(intent);
     }
 
     //Boton Servidor
