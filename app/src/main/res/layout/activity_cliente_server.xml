@@ -7,13 +7,14 @@
     tools:context=".ClienteServerActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/ClienteDatos"
         android:layout_width="229dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="76dp"
         android:layout_marginTop="128dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:onClick="onClickCliente"
         android:text="Configuracion del Cliente"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,13 +24,14 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/ServidorCliente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="204dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:onClick="onClickServidor"
         android:text="Configuracion del Servidor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
