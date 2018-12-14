@@ -12,13 +12,24 @@ public class ClienteServerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente_server);
 
-
     }
 
     //Boton Acerca De...
     public void onClickAcercaDe(View v){
         Intent intent = new Intent(ClienteServerActivity.this, AcercaDeActivity.class);
         startActivity(intent);
-
     }
+
+    //Boton Cliente
+    public void onClickCliente(View v){
+        Intent intent = new Intent(ClienteServerActivity.this, ClienteDatosActivity.class);
+        startActivity(intent);
+    }
+
+    //Boton Servidor
+    public void onClickServidor(View v){
+       // Intent intent = new Intent(ClienteServerActivity.this, ServidorDatosActivity.class);
+        //startActivity(intent);
+    }
+
 }
