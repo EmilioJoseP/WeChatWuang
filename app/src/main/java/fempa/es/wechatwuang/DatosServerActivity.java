@@ -16,7 +16,9 @@ public class DatosServerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_datos_server);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     //Flecha que vuelva al Principal
@@ -35,23 +37,42 @@ public class DatosServerActivity extends AppCompatActivity {
 
     //Boton Aceptar
     //Al Aceptar si todos los datos esta bien se pondra el Activity Chat
-    public void onClickAceptar(View v){
+    public void onClickAceptarServer(View v){
 
         EditText editTextNombre = (EditText) findViewById(R.id.editTextNombre);
-        EditText editTextIp = (EditText) findViewById(R.id.editTextIp);
         EditText editTextPuerto = (EditText) findViewById(R.id.editTextPuerto);
 
-
         String textNombre = editTextNombre.getText().toString();
-        String textNombreDatos = "Servidor";
-        String textIp = editTextIp.getText().toString();
+        String textNombreDatos = "server";
         String textPuerto = editTextPuerto.getText().toString();
-        String textIpPuerto = textIp + ":" + textPuerto;
+        int numPuerto = 1048;
+        boolean bool = true;
 
-        Intent intent = new Intent(DatosServerActivity.this, ChatActivity.class);
-        intent.putExtra("clienteOServer", textNombreDatos);
-        intent.putExtra("nombre", textNombre);
-        intent.putExtra("ipPuerto", textIpPuerto);
+        //Comprobamos si nos pasa numero o texto en Puerto
+        try {
+            numPuerto = Integer.parseInt(textPuerto);
 
+            //Comprobamos si el puerto no es menos que 1024 y tiene menos de 4 o 5 de longitud
+            if ((numPuerto <= 1024 && (textPuerto.length() == 4 || textPuerto.length() == 5))) {
+                Toast.makeText(this, "Introduzca un puerto correcto", Toast.LENGTH_LONG).show();
+                bool = false;
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Error en el puerto", Toast.LENGTH_LONG).show();
+            bool = false;
+        }
+
+        if(textNombre.equals("")){
+            Toast.makeText(this, "Error, rellena el nombre", Toast.LENGTH_LONG).show();
+            bool = false;
+        }
+
+        if (bool) {
+            Intent intent = new Intent(DatosServerActivity.this, ChatActivity.class);
+            intent.putExtra("clienteOServer", textNombreDatos);
+            intent.putExtra("nombre", textNombre);
+            intent.putExtra("puerto", numPuerto);
+            startActivity(intent);
+        }
     }
 }
