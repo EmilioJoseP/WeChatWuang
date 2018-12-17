@@ -85,24 +85,28 @@ public class ChatActivity extends AppCompatActivity {
         this.lista.setAdapter(this.miAdapatador);
     }
 
-    protected class actualizarListaThread implements Runnable
-    {
+    protected class actualizarListaThread implements Runnable {
         private String text;
-        public actualizarListaThread(String text){this.text=text;}
-        public void run(){miAdapatador.notifyDataSetChanged();}
+
+        public actualizarListaThread(String text) {
+            this.text = text;
+        }
+
+        public void run() {
+            miAdapatador.notifyDataSetChanged();
+        }
     }
 
-    protected class cambiarMenuUI implements Runnable
-    {
+    protected class cambiarMenuUI implements Runnable {
         private String text;
         private ActionBar e;
 
         public cambiarMenuUI(String text, ActionBar e) {
-            this.text=text;
+            this.text = text;
             this.e = e;
         }
 
-        public void run(){
+        public void run() {
             this.e.setTitle(this.text);
         }
     }
@@ -127,7 +131,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void onClickEnviarMensaje(View v) {
-        EditText et = (EditText)findViewById(R.id.editTextMensaje);
+        EditText et = (EditText) findViewById(R.id.editTextMensaje);
         if (this.clienteOServer.equals("cliente")) {
             this.mensajes.add(et.getText().toString() + ":c");
         } else {
@@ -139,13 +143,12 @@ public class ChatActivity extends AppCompatActivity {
         et.setText("");
     }
 
-    private void enviarMensaje(String txt)
-    {
+    private void enviarMensaje(String txt) {
         new EnviarMensajeThread(txt).start();
     }
 
     public void iniciarServer() {
-        (HiloEspera=new EsperaClienteThread()).start();
+        (HiloEspera = new EsperaClienteThread()).start();
     }
 
     public void iniciarCliente() {
@@ -176,12 +179,12 @@ public class ChatActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                ConectionEstablished=true;
+                ConectionEstablished = true;
 
                 //Iniciamos el hilo para la escucha y procesado de mensajes
-                (HiloEscucha=new RecibirMensajeThread()).start();
+                (HiloEscucha = new RecibirMensajeThread()).start();
 
-                HiloEspera=null;
+                HiloEspera = null;
             } catch (IOException e) {
                 Log.d("loquesea", "Server: Petada de socket");
                 e.printStackTrace();
@@ -195,12 +198,12 @@ public class ChatActivity extends AppCompatActivity {
         private String line;
 
         public void run() {
-            executing=true;
+            executing = true;
             Log.d("loquesea", "Server: Esperando");
-            while(executing) {
-                line="";
-                line=ObtenerCadena();//Obtenemos la cadena del buffer
-                if(line!="" && line.length()!=0) {//Comprobamos que esa cadena tenga contenido
+            while (executing) {
+                line = "";
+                line = ObtenerCadena();//Obtenemos la cadena del buffer
+                if (line != "" && line.length() != 0) {//Comprobamos que esa cadena tenga contenido
                     //AppenText("Recibido: "+line + "\n");//Procesamos la cadena recibida
                     //Aqui se escribe
                     mensajeRecibido(line);
@@ -208,24 +211,23 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
 
-        public void setExecuting (boolean execute) {
-            executing=execute;
+        public void setExecuting(boolean execute) {
+            executing = execute;
         }
 
         private String ObtenerCadena() {
-            String cadena="";
+            String cadena = "";
 
             try {
-                cadena=dataInputStream.readUTF(); //Leemos del datainputStream una cadena UTF
-                Log.d("loquesea", "Cadena reibida: "+cadena);
-            } catch(Exception e) {
+                cadena = dataInputStream.readUTF(); //Leemos del datainputStream una cadena UTF
+                Log.d("loquesea", "Cadena reibida: " + cadena);
+            } catch (Exception e) {
                 e.printStackTrace();
-                executing=false;
+                executing = false;
             }
             return cadena;
         }
     }
-
 
 
     private class ClienteConectarAServerThread extends Thread {
@@ -235,8 +237,7 @@ public class ChatActivity extends AppCompatActivity {
             mIp = ip;
         }
 
-        public void run()
-        {
+        public void run() {
             try {
                 socket = new Socket(mIp, puerto);//Creamos el socket
 
@@ -248,7 +249,7 @@ public class ChatActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                ConectionEstablished=true;
+                ConectionEstablished = true;
 
                 //Iniciamos el hilo para la escucha y procesado de mensajes
                 (HiloEscucha = new RecibirMensajeThread()).start();
@@ -263,23 +264,23 @@ public class ChatActivity extends AppCompatActivity {
     private class EnviarMensajeThread extends Thread {
         private String msg;
 
-        public EnviarMensajeThread (String message) {
+        public EnviarMensajeThread(String message) {
             msg = message;
         }
 
         @Override
-        public void run(){
+        public void run() {
             try {
                 int i = 2;
                 dataOutputStream.writeUTF(msg);//Enviamos el mensaje
-            }catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
     private void DesconectarSockets() {
-        if(ConectionEstablished) {
+        if (ConectionEstablished) {
             ConectionEstablished = false;
 
             if (HiloEscucha != null) {
@@ -338,5 +339,11 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         return ip;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DesconectarSockets();
     }
 }

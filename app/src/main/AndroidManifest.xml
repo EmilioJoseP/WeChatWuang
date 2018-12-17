@@ -23,7 +23,7 @@
         <activity android:name=".DatosClienteActivity"></activity>
         <activity android:name=".DatosServerActivity"></activity>
         <activity android:name=".ChatActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>
