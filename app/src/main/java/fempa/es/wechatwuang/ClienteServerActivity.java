@@ -28,8 +28,8 @@ public class ClienteServerActivity extends AppCompatActivity {
 
     //Boton Servidor
     public void onClickServidor(View v){
-       // Intent intent = new Intent(ClienteServerActivity.this, ServidorDatosActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(ClienteServerActivity.this, DatosServerActivity.class);
+        startActivity(intent);
     }
 
 }
