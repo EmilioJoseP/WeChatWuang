@@ -18,20 +18,21 @@
 
         <EditText
             android:id="@+id/editTextMensaje"
-            android:layout_width="286dp"
+            android:layout_width="274dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
+            android:background="@drawable/text_view_circulo_chat"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/buttonEnviar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Enviar"
-            android:onClick="onClickEnviarMensaje"/>
+            android:onClick="onClickEnviarMensaje"
+            android:text="Enviar" />
     </LinearLayout>
 
 </LinearLayout>

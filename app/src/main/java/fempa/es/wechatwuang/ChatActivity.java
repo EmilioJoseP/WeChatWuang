@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -90,6 +91,23 @@ public class ChatActivity extends AppCompatActivity {
             Log.d("loquesea", "Iniciando Server");
             iniciarServer();
         }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    //Flecha que vuelva al Principal
+    public boolean onOptionsItemSelected(MenuItem menu) {
+        switch (menu.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(ChatActivity.this, ClienteServerActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(menu);
     }
 
     protected class actualizarListaThread implements Runnable {

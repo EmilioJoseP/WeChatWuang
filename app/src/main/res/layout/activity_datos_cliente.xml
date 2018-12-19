@@ -48,6 +48,7 @@
 
         <EditText
             android:id="@+id/editTextPuerto"
+
             android:layout_width="86dp"
             android:layout_height="wrap_content"
             android:hint="5000"
@@ -67,6 +68,7 @@
 
     <EditText
         android:id="@+id/editTextNombre"
+        android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Eustaquio"
