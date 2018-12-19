@@ -1,14 +1,21 @@
 package fempa.es.wechatwuang;
 
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.icu.text.MeasureFormat;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -42,15 +49,20 @@ public class ChatActivity extends AppCompatActivity {
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
 
-    ListView lista;
-    ArrayList<String> mensajes;
-    ArrayAdapter<String> arrayAdapter;
-    Adapter miAdapatador;
+    //ListView lista;
+   // ArrayList<String> mensajes;
+   // ArrayAdapter<String> arrayAdapter;
+   // Adapter miAdapatador;
+    Button botonEnviar;
+    LinearLayout layoutParaMensajes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_chat_sin_listview);
+
+        botonEnviar = findViewById(R.id.buttonEnviar);
+        botonEnviar.setEnabled(false);
 
         Intent intentDeDatos = getIntent();
         this.clienteOServer = intentDeDatos.getStringExtra("clienteOServer");
@@ -66,34 +78,54 @@ public class ChatActivity extends AppCompatActivity {
             this.puerto = intentDeDatos.getIntExtra("puerto", 1048);
         }
 
-        this.mensajes = new ArrayList<>();
+       // this.mensajes = new ArrayList<>();
         //this.mensajes.add(getIp());
-        this.lista = findViewById(R.id.lista);
+        //this.lista = findViewById(R.id.lista);
 
         //this.arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, this.mensajes);
 
-
+        layoutParaMensajes = findViewById(R.id.linearParañadir);
+       // TextView tv = new TextView(this);
+       // tv.setText("efñwefñoe");
         if (this.clienteOServer.equals("cliente")) {
-            this.miAdapatador = new Adapter(this, R.layout.mensaje_recibido, this.mensajes, "cliente");
+        //    this.miAdapatador = new Adapter(this, R.layout.mensaje_recibido, this.mensajes, "cliente");
+            //linear.addView(tv);
             iniciarCliente();
         } else {
             Log.d("loquesea", "Iniciando Server");
-            this.miAdapatador = new Adapter(this, R.layout.mensaje_recibido, this.mensajes, "server");
+        //    this.miAdapatador = new Adapter(this, R.layout.mensaje_recibido, this.mensajes, "server");
+            //linear.addView(tv);
             iniciarServer();
         }
 
-        this.lista.setAdapter(this.miAdapatador);
+
+
+     //   this.lista.setAdapter(this.miAdapatador);
     }
 
     protected class actualizarListaThread implements Runnable {
         private String text;
+        private String quien;
 
-        public actualizarListaThread(String text) {
+        public actualizarListaThread(String text, String quien) {
             this.text = text;
+            this.quien = quien;
         }
 
         public void run() {
-            miAdapatador.notifyDataSetChanged();
+       //     miAdapatador.notifyDataSetChanged();
+            MiTextView tv = null;
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.gravity = Gravity.START;
+            params.setMargins(10, 10, 10, 10);
+
+            tv = new MiTextView(new ContextThemeWrapper(ChatActivity.this, R.style.TextIzquierda), null, 0);
+
+            if (tv != null) {
+                tv.setText(this.text);
+                layoutParaMensajes.addView(tv, params);
+            }
         }
     }
 
@@ -108,6 +140,7 @@ public class ChatActivity extends AppCompatActivity {
 
         public void run() {
             this.e.setTitle(this.text);
+            botonEnviar.setEnabled(true);
         }
     }
 
@@ -121,25 +154,38 @@ public class ChatActivity extends AppCompatActivity {
             mensaje0ConNombre = false;
         } else {
             if (this.clienteOServer.equals("cliente")) {
-                this.mensajes.add(e + ":s");
+                //this.mensajes.add(e + ":s");
+                runOnUiThread(new actualizarListaThread(e, ":s"));
             } else {
-                this.mensajes.add(e + ":c");
+                //this.mensajes.add(e + ":c");
+                runOnUiThread(new actualizarListaThread(e, ":c"));
             }
-            runOnUiThread(new actualizarListaThread(""));
-        }
 
+        }
     }
 
     public void onClickEnviarMensaje(View v) {
         EditText et = (EditText) findViewById(R.id.editTextMensaje);
-        if (this.clienteOServer.equals("cliente")) {
-            this.mensajes.add(et.getText().toString() + ":c");
-        } else {
-            this.mensajes.add(et.getText().toString() + ":s");
+
+        MiTextView tv = null;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.END;
+        params.setMargins(10, 10, 10, 10);
+
+        if (clienteOServer.equals("server")) {
+            tv = new MiTextView(new ContextThemeWrapper(this, R.style.TextDerecha), null, 0);
         }
 
+        if (clienteOServer.equals("cliente")) {
+            tv = new MiTextView(new ContextThemeWrapper(this, R.style.TextDerecha), null, 0);
+        }
+
+        tv.setText(et.getText().toString());
+        layoutParaMensajes.addView(tv, params);
+
+
         enviarMensaje(et.getText().toString());
-        this.miAdapatador.notifyDataSetChanged();
+       // this.miAdapatador.notifyDataSetChanged();
         et.setText("");
     }
 
@@ -271,7 +317,6 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                int i = 2;
                 dataOutputStream.writeUTF(msg);//Enviamos el mensaje
             } catch (IOException e) {
                 e.printStackTrace();

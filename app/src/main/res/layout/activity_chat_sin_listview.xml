@@ -6,19 +6,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/lista"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="463dp" />
+        android:layout_height="458dp">
+
+        <LinearLayout
+            android:id="@+id/linearParañadir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+    </ScrollView>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/editTextMensaje"
-            android:layout_width="286dp"
+            android:layout_width="302dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TextDerecha">
+        <item name="android:background">@drawable/text_view_circulo_derecha</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="TextIzquierda">
+        <item name="android:background">@drawable/text_view_circulo_izquierda</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
 </resources>
