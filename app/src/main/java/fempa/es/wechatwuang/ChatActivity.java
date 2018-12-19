@@ -1,8 +1,6 @@
 package fempa.es.wechatwuang;
 
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.icu.text.MeasureFormat;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +8,9 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,7 +19,6 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 
 public class ChatActivity extends AppCompatActivity {
@@ -49,83 +42,68 @@ public class ChatActivity extends AppCompatActivity {
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
 
-    //ListView lista;
-   // ArrayList<String> mensajes;
-   // ArrayAdapter<String> arrayAdapter;
-   // Adapter miAdapatador;
     Button botonEnviar;
     LinearLayout layoutParaMensajes;
+    LinearLayout.LayoutParams parametrosParaMensajesDerecha;
+    LinearLayout.LayoutParams parametrosParaMensajesIzqui;
+    LinearLayout.LayoutParams parametrosParaMensajeInicial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_sin_listview);
 
-        botonEnviar = findViewById(R.id.buttonEnviar);
-        botonEnviar.setEnabled(false);
+        this.botonEnviar = findViewById(R.id.buttonEnviar);
+        this.botonEnviar.setEnabled(false);
+
+        this.parametrosParaMensajesDerecha = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        this.parametrosParaMensajesDerecha.setMargins(10, 10, 10, 10);
+        this.parametrosParaMensajesDerecha.gravity = Gravity.END;
+
+        this.parametrosParaMensajesIzqui = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        this.parametrosParaMensajesIzqui.setMargins(10, 10, 10, 10);
+        this.parametrosParaMensajesIzqui.gravity = Gravity.START;
+
+        this.parametrosParaMensajeInicial = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        this.parametrosParaMensajeInicial.setMargins(10, 10, 10, 10);
+        this.parametrosParaMensajeInicial.gravity = Gravity.CENTER;
 
         Intent intentDeDatos = getIntent();
         this.clienteOServer = intentDeDatos.getStringExtra("clienteOServer");
         this.nombre = intentDeDatos.getStringExtra("nombre");
         String ipPuerto = intentDeDatos.getStringExtra("ipPuerto");
+
         if (this.clienteOServer.equals("cliente")) {
             String[] paraSplit = ipPuerto.split(":");
             this.ip = paraSplit[0];
             this.puerto = Integer.parseInt(paraSplit[1]);
-            //Toast.makeText(this,  this.ip, Toast.LENGTH_SHORT).show();
-            //Toast.makeText(this,  this.puerto + "", Toast.LENGTH_SHORT).show();
         } else {
             this.puerto = intentDeDatos.getIntExtra("puerto", 1048);
         }
 
-       // this.mensajes = new ArrayList<>();
-        //this.mensajes.add(getIp());
-        //this.lista = findViewById(R.id.lista);
-
-        //this.arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, this.mensajes);
 
         layoutParaMensajes = findViewById(R.id.linearParañadir);
-       // TextView tv = new TextView(this);
-       // tv.setText("efñwefñoe");
+
         if (this.clienteOServer.equals("cliente")) {
-        //    this.miAdapatador = new Adapter(this, R.layout.mensaje_recibido, this.mensajes, "cliente");
-            //linear.addView(tv);
             iniciarCliente();
         } else {
             Log.d("loquesea", "Iniciando Server");
-        //    this.miAdapatador = new Adapter(this, R.layout.mensaje_recibido, this.mensajes, "server");
-            //linear.addView(tv);
             iniciarServer();
         }
-
-
-
-     //   this.lista.setAdapter(this.miAdapatador);
     }
 
     protected class actualizarListaThread implements Runnable {
         private String text;
-        private String quien;
 
-        public actualizarListaThread(String text, String quien) {
+        public actualizarListaThread(String text) {
             this.text = text;
-            this.quien = quien;
         }
 
         public void run() {
-       //     miAdapatador.notifyDataSetChanged();
-            MiTextView tv = null;
+            MiTextView tv = new MiTextView(new ContextThemeWrapper(ChatActivity.this, R.style.TextIzquierda), null, 0);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.gravity = Gravity.START;
-            params.setMargins(10, 10, 10, 10);
-
-            tv = new MiTextView(new ContextThemeWrapper(ChatActivity.this, R.style.TextIzquierda), null, 0);
-
-            if (tv != null) {
-                tv.setText(this.text);
-                layoutParaMensajes.addView(tv, params);
-            }
+            tv.setText(this.text);
+            layoutParaMensajes.addView(tv, parametrosParaMensajesIzqui);
         }
     }
 
@@ -153,39 +131,18 @@ public class ChatActivity extends AppCompatActivity {
             cambiarMenu(e);
             mensaje0ConNombre = false;
         } else {
-            if (this.clienteOServer.equals("cliente")) {
-                //this.mensajes.add(e + ":s");
-                runOnUiThread(new actualizarListaThread(e, ":s"));
-            } else {
-                //this.mensajes.add(e + ":c");
-                runOnUiThread(new actualizarListaThread(e, ":c"));
-            }
-
+            runOnUiThread(new actualizarListaThread(e));
         }
     }
 
     public void onClickEnviarMensaje(View v) {
         EditText et = (EditText) findViewById(R.id.editTextMensaje);
 
-        MiTextView tv = null;
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.END;
-        params.setMargins(10, 10, 10, 10);
-
-        if (clienteOServer.equals("server")) {
-            tv = new MiTextView(new ContextThemeWrapper(this, R.style.TextDerecha), null, 0);
-        }
-
-        if (clienteOServer.equals("cliente")) {
-            tv = new MiTextView(new ContextThemeWrapper(this, R.style.TextDerecha), null, 0);
-        }
+        MiTextView tv = new MiTextView(new ContextThemeWrapper(this, R.style.TextDerecha), null, 0);
 
         tv.setText(et.getText().toString());
-        layoutParaMensajes.addView(tv, params);
-
-
+        layoutParaMensajes.addView(tv, this.parametrosParaMensajesDerecha);
         enviarMensaje(et.getText().toString());
-       // this.miAdapatador.notifyDataSetChanged();
         et.setText("");
     }
 
@@ -207,6 +164,12 @@ public class ChatActivity extends AppCompatActivity {
                 Log.d("loquesea", "Server: puerto " + puerto);
                 //Abrimos el socket
                 serverSocket = new ServerSocket(puerto);
+
+
+                MiTextView tv = new MiTextView(new ContextThemeWrapper(ChatActivity.this, R.style.TextInicial), null, 0);
+                tv.setText(getIp() + ":" + puerto);
+                layoutParaMensajes.addView(tv, parametrosParaMensajeInicial);
+
 
                 //Mostramos un mensaje para indicar que estamos esperando en la direccion ip y el puerto...
                 //AppenText("Creado el servidor\n Dirección: "+getIpAddress()+" Puerto: "+serverSocket.getLocalPort());
@@ -249,9 +212,7 @@ public class ChatActivity extends AppCompatActivity {
             while (executing) {
                 line = "";
                 line = ObtenerCadena();//Obtenemos la cadena del buffer
-                if (line != "" && line.length() != 0) {//Comprobamos que esa cadena tenga contenido
-                    //AppenText("Recibido: "+line + "\n");//Procesamos la cadena recibida
-                    //Aqui se escribe
+                if (line != "" && line.length() != 0) {
                     mensajeRecibido(line);
                 }
             }
@@ -374,13 +335,13 @@ public class ChatActivity extends AppCompatActivity {
                     InetAddress inetAddress = enumInetAddress.nextElement();
 
                     if (inetAddress.isSiteLocalAddress()) {
-                        ip += "IP de Servidor: " + inetAddress.getHostAddress() + "\n";
+                        ip += "IP de Servidor: " + inetAddress.getHostAddress();
                     }
                 }
             }
         } catch (SocketException e) {
             e.printStackTrace();
-            ip += "¡Algo fue mal! " + e.toString() + "\n";
+            ip += "¡Algo fue mal! " + e.toString();
         }
 
         return ip;
