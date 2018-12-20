@@ -48,6 +48,7 @@ public class DatosClienteActivity extends AppCompatActivity {
         String textIp = editTextIp.getText().toString();
         String textPuerto = editTextPuerto.getText().toString();
         String textIpPuerto = textIp + ":" + textPuerto;
+
         int numPuerto = 0;
         int numIp0 = 0;
         int numIp1 = 0;
@@ -59,7 +60,7 @@ public class DatosClienteActivity extends AppCompatActivity {
         try {
             numPuerto = Integer.parseInt(textPuerto);
         } catch (Exception e) {
-            Toast.makeText(this, "Error en el puerto", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error, introduzca un puerto correcto.", Toast.LENGTH_LONG).show();
             bool = false;
         }
 
@@ -70,25 +71,25 @@ public class DatosClienteActivity extends AppCompatActivity {
             numIp2 = Integer.parseInt(numIp[2]);
             numIp3 = Integer.parseInt(numIp[3]);
         } catch (Exception e) {
-            Toast.makeText(this, "Error en la ip", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error, introduzca una ip correcta.", Toast.LENGTH_LONG).show();
             bool = false;
         }
 
         //Comprobamos si los compas estan rellenos
         if(textNombre.equals("") || textIp.equals("") || textIpPuerto.equals("")){
-            Toast.makeText(this, "Error, rellene todod los campos", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error, rellene todos los campos.", Toast.LENGTH_LONG).show();
             bool = false;
         }
 
         //Comprobamos si el puerto no es menos que 1024 y tiene menos de 4 o 5 de longitud
         if (numPuerto <= 1024 || numPuerto >= 65535) {
-            Toast.makeText(this, "Introduzca un puerto correcto", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error, introduzca un puerto correcto.", Toast.LENGTH_LONG).show();
             bool = false;
         }
 
         //Comprobamos la posicion 0 de la Ip
         if((numIp0 < 1 || numIp0 >= 255) && (numIp1 < 1 || numIp1 >= 255) && (numIp2 < 1 || numIp2 >= 255) && (numIp3 < 1 || numIp3 >= 255)){
-            Toast.makeText(this, numIp0  +"" + numIp1+ "" +numIp2 +""+ numIp3, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error, introduzca una ip correcta.", Toast.LENGTH_LONG).show();
             bool = false;
         }
 
@@ -98,8 +99,6 @@ public class DatosClienteActivity extends AppCompatActivity {
             intent.putExtra("clienteOServer", "cliente");
             intent.putExtra("nombre", textNombre);
             intent.putExtra("ipPuerto", textIpPuerto);
-
-            Toast.makeText(this, textIpPuerto, Toast.LENGTH_LONG).show();
             startActivity(intent);
         }
     }

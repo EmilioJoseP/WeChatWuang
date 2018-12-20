@@ -53,17 +53,17 @@ public class DatosServerActivity extends AppCompatActivity {
             numPuerto = Integer.parseInt(textPuerto);
 
             //Comprobamos si el puerto no es menos que 1024 y tiene menos de 4 o 5 de longitud
-            if ((numPuerto <= 1024 && (textPuerto.length() == 4 || textPuerto.length() == 5))) {
-                Toast.makeText(this, "Introduzca un puerto correcto", Toast.LENGTH_LONG).show();
+            if (numPuerto <= 1024 || numPuerto >= 65535) {
+                Toast.makeText(this, "Error, introduzca un puerto correcto.", Toast.LENGTH_LONG).show();
                 bool = false;
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Error en el puerto", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error, introduzca un puerto correcto.", Toast.LENGTH_LONG).show();
             bool = false;
         }
 
         if(textNombre.equals("")){
-            Toast.makeText(this, "Error, rellena el nombre", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error, introduzca un nombre.", Toast.LENGTH_LONG).show();
             bool = false;
         }
 
