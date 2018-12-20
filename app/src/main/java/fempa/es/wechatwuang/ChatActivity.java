@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -43,7 +44,7 @@ public class ChatActivity extends AppCompatActivity {
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
 
-    Button botonEnviar;
+    ImageButton botonEnviar;
     LinearLayout layoutParaMensajes;
     LinearLayout.LayoutParams parametrosParaMensajesDerecha;
     LinearLayout.LayoutParams parametrosParaMensajesIzqui;
@@ -101,6 +102,7 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menu) {
         switch (menu.getItemId()) {
             case android.R.id.home:
+                DesconectarSockets();
                 Intent intent = new Intent(ChatActivity.this, ClienteServerActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
