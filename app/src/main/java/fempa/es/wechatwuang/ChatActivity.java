@@ -411,6 +411,16 @@ public class ChatActivity extends AppCompatActivity {
                     } catch (Exception e) {
                     } finally {
                         socket = null;
+                        if (serverSocket != null) {
+                            try {
+                                serverSocket.close();
+                            }catch (Exception e) {
+
+                            } finally {
+                                serverSocket = null;
+                            }
+
+                        }
                     }
                 }
             }
