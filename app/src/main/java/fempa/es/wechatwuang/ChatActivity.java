@@ -1,15 +1,16 @@
 package fempa.es.wechatwuang;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -49,6 +50,7 @@ public class ChatActivity extends AppCompatActivity {
     LinearLayout.LayoutParams parametrosParaMensajesDerecha;
     LinearLayout.LayoutParams parametrosParaMensajesIzqui;
     LinearLayout.LayoutParams parametrosParaMensajeInicial;
+    AlertDialog.Builder paraBorrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,20 @@ public class ChatActivity extends AppCompatActivity {
         this.parametrosParaMensajeInicial.setMargins(10, 10, 10, 10);
         this.parametrosParaMensajeInicial.gravity = Gravity.CENTER;
 
+        paraBorrar = new AlertDialog.Builder(this);
+        paraBorrar.setMessage("El otro usuario se ha desconectado.");
+        paraBorrar.setTitle("Desconectando...");
+        paraBorrar.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Solo llama a la funcion y ella se encarga de lo demas
+                DesconectarSockets();
+                Intent intent = new Intent(ChatActivity.this, ClienteServerActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
         Intent intentDeDatos = getIntent();
         this.clienteOServer = intentDeDatos.getStringExtra("clienteOServer");
         this.nombre = intentDeDatos.getStringExtra("nombre");
@@ -82,6 +98,8 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             this.puerto = intentDeDatos.getIntExtra("puerto", 1048);
         }
+
+        getSupportActionBar().setTitle("Esperando conexión...");
 
 
         layoutParaMensajes = findViewById(R.id.linearParañadir);
@@ -102,6 +120,7 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menu) {
         switch (menu.getItemId()) {
             case android.R.id.home:
+                enviarMensaje(" : : : : : : : : : :salgo");
                 DesconectarSockets();
                 Intent intent = new Intent(ChatActivity.this, ClienteServerActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -127,6 +146,15 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    protected class mensajeDesconexion implements Runnable {
+        public mensajeDesconexion() {
+        }
+
+        public void run() {
+            paraBorrar.show();
+        }
+    }
+
     protected class cambiarMenuUI implements Runnable {
         private String text;
         private ActionBar e;
@@ -147,9 +175,14 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void mensajeRecibido(String e) {
+        String[] lo = e.split(":");
         if (mensaje0ConNombre) {
             cambiarMenu(e);
             mensaje0ConNombre = false;
+        } else if (lo.length == 11 && lo[lo.length -1].equals("salgo") ) {
+            Log.d("loquesea", "El otro se ha ido del to");
+            //codigo
+            runOnUiThread(new mensajeDesconexion());
         } else {
             runOnUiThread(new actualizarListaThread(e));
         }
@@ -157,17 +190,31 @@ public class ChatActivity extends AppCompatActivity {
 
     public void onClickEnviarMensaje(View v) {
         EditText et = (EditText) findViewById(R.id.editTextMensaje);
+        String mensajeParaEnviar = et.getText().toString();
 
-        MiTextView tv = new MiTextView(new ContextThemeWrapper(this, R.style.TextDerecha), null, 0);
+        if (mensajeParaEnviar.length() > 0) {
+            MiTextView tv = new MiTextView(new ContextThemeWrapper(this, R.style.TextDerecha), null, 0);
 
-        tv.setText(et.getText().toString());
-        layoutParaMensajes.addView(tv, this.parametrosParaMensajesDerecha);
-        enviarMensaje(et.getText().toString());
-        et.setText("");
+            tv.setText(et.getText().toString());
+            layoutParaMensajes.addView(tv, this.parametrosParaMensajesDerecha);
+            enviarMensaje(mensajeParaEnviar);
+            et.setText("");
+        }
+
     }
 
     private void enviarMensaje(String txt) {
-        new EnviarMensajeThread(txt).start();
+        if (txt.equals(" : : : : : : : : : :salgo")) {
+            EnviarMensajeThread emt = new EnviarMensajeThread(txt);
+            emt.start();
+            try {
+                emt.join();
+            } catch (Exception e) {
+
+            }
+        } else {
+            new EnviarMensajeThread(txt).start();
+        }
     }
 
     public void iniciarServer() {
@@ -256,7 +303,6 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-
     private class ClienteConectarAServerThread extends Thread {
         String mIp;
 
@@ -301,6 +347,7 @@ public class ChatActivity extends AppCompatActivity {
                 dataOutputStream.writeUTF(msg);//Enviamos el mensaje
             } catch (IOException e) {
                 e.printStackTrace();
+                runOnUiThread(new mensajeDesconexion());
             }
         }
     }
@@ -341,7 +388,6 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    //Aqui obtenemos la IP de nuestro terminal
     private String getIp() {
 
         String ip = "";
